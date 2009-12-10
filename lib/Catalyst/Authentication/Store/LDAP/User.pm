@@ -49,7 +49,7 @@ use base qw( Catalyst::Authentication::User Class::Accessor::Fast );
 use strict;
 use warnings;
 
-our $VERSION = '0.1004';
+our $VERSION = '0.1005';
 
 BEGIN { __PACKAGE__->mk_accessors(qw/user store _ldap_connection_password/) }
 
@@ -57,18 +57,20 @@ use overload '""' => sub { shift->stringify }, fallback => 1;
 
 =head1 METHODS
 
-=head2 new($store, $user)
+=head2 new($store, $user, $c)
 
 Takes a L<Catalyst::Authentication::Store::LDAP::Backend> object
 as $store, and the data structure returned by that class's "get_user"
-method as $user.
+method as $user.  The final argument is an instance of your application,
+which is passed along for those wanting to subclass User and perhaps use
+models for fetching data.
 
 Returns a L<Catalyst::Authentication::Store::LDAP::User> object.
 
 =cut
 
 sub new {
-    my ( $class, $store, $user ) = @_;
+    my ( $class, $store, $user, $c ) = @_;
 
     return unless $user;
 
