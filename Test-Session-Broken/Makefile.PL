@@ -23,12 +23,9 @@ requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
 
-requires 'Catalyst::Model::Adaptor';
-requires 'Catalyst::Controller::HTML::FormFu';
-
 requires 'Moose';
 requires 'namespace::autoclean';
-requires 'Config::JSON'; # This should reflect the config file format you've chosen
+#requires 'Config::JSON'; # This should reflect the config file format you've chosen
                  # See Catalyst::Plugin::ConfigLoader for supported formats
 test_requires 'Test::More' => '0.88';
 catalyst;

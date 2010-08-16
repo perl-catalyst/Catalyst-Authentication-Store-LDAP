@@ -14,7 +14,6 @@ use Catalyst::Runtime 5.80;
 
 use Catalyst qw/
     -Debug
-    ConfigLoader
     Static::Simple
     
     Authentication
@@ -42,8 +41,44 @@ __PACKAGE__->config(
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
 
-    'Plugin::ConfigLoader' => { file => 'config.json' },
+    authentication => {
+        default_realm => "ldap",
+
+        realms => {
+            ldap => {
+                credential => {
+                    "class" => "Password",
+                    "password_field" => "password",
+                    "password_type" => "self_check",
+                    "password_hash_type" => "crypt",
+                },
+
+                "store" => {
+                    "binddn"                => "anonymous",
+                    "bindpw"                => "dontcare",
+        
+                    "class"                 => "LDAP",
+    
+                    "ldap_server"           => "ldap.test.no",
+                    "ldap_server_options"   => { 
+                        "timeout" => 30, 
+                        "port" => "636", 
+                        "scheme" => "ldaps" 
+                    },
+    
+                    "role_basedn"           => "ou=stavanger,o=test,c=no",
+                    "role_field"            => "cn",
+                    "role_filter"           => "(&(objectClass=groupOfNames)(member=%s))",
+                    "user_scope"            => "one",
+                    "user_search_options"   => { 
+                        "deref" => "always" 
+                    }
+                }
+            }
+        }
+    }
 );
+
 
 # Start the application
 __PACKAGE__->setup();

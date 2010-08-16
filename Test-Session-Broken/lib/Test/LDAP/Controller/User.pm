@@ -38,7 +38,7 @@ sub user :Chained('base') :PathPart('') :CaptureArgs(2) {
     }
 
     if ($noargs) {
-        $c->stash->{template} = "common/noarg.tt";
+        $c->res->body("No Args");
         $c->detach;
     }
 
@@ -69,7 +69,7 @@ sub user :Chained('base') :PathPart('') :CaptureArgs(2) {
     }
 
     if ($noresult) {
-        $c->stash->{template} = "common/noresult.tt";
+        $c->res->body("No results");
         $c->detach;
     }
 }
@@ -77,49 +77,18 @@ sub user :Chained('base') :PathPart('') :CaptureArgs(2) {
 sub view :Chained('user') :PathPart('view') :Args(0) {
     my ($self, $c) = @_;
 
-    $c->stash->{template} = "common/results.tt"
+    $c->res->body("Results");
 }
 
-sub edit :Chained('user') :PathPart('edit') :Args(0) :FormConfig {
+sub edit :Chained('user') :PathPart('edit') :Args(0)  {
     my ( $self, $c ) = @_;
 
     # Check if the loc that is specified is a wildcard, do an error if it's true
     if ($c->stash->{ou} =~ /^\*/) {
-        $c->stash(
-            template => "error-generic.tt",
-            message => "You cannot use '*' as an OU / Location when editing a user!",
-        );
+        $c->res->body("You cannot use '*' as an OU / Location when editing a user!");
         $c->res->status("500");
         $c->detach
     }
-
-    # Get the form.
-    my $form = $c->stash->{"form"};
-
-    # Get the ldap object from the loaded objects
-    my $entry = $c->stash->{result}->{ $c->stash->{id} }->{ $c->stash->{ou} };
-
-    #  If the form is submitted and valid let's try to update the data
-    if ($form->submitted_and_valid) {
-        my $params = $c->req->params;
-
-        foreach my $attr ($params) {
-            $entry->replace ($attr => $params->{$attr}) if ( defined ($params->{$attr}) );
-        }
-
-        $entry->update
-    }
-
-    # Autofill the form..
-    my $options = {};
-    foreach my $attr ($entry->attributes) {
-        my $value = $entry->get_value($attr);
-        $options->{$attr} = $value;
-
-        push @{$c->stash->{attributes}}, $attr . ":" . $value . "<br />"
-    }
-
-    $form->default_values($options);
 }
 
 =head2 auto

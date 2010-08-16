@@ -2,7 +2,7 @@ package Test::LDAP::Controller::Auth;
 use Moose;
 use namespace::autoclean;
 
-BEGIN {extends 'Catalyst::Controller::HTML::FormFu'; }
+BEGIN {extends 'Catalyst::Controller'; }
 
 =head1 NAME
 
@@ -20,10 +20,10 @@ Catalyst Controller.
 =head2 index
 
 =cut
-sub index :Path :Args(0) :FormConfig {
+sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    my $form = $c->stash->{form};
+    $c->res->body("Login");
 }
 
 sub login :Path("login") :Args(0) {
@@ -52,12 +52,12 @@ sub login :Path("login") :Args(0) {
             # Since we got auth, let's bind with the model with a dn & pass as well.
             #$c->model('LDAP')->bind (dn => $
         } else {
-            $c->stash->{"message"} = ("Bad username and/or password");
+            $c->res->body("Bad user/password")
         }
 
     } else {
         # If not throw a message c
-        $c->stash->{"message"} = "Missing Username and/or password"
+        $c->res->body("Missing credentials");
     }
 }
 

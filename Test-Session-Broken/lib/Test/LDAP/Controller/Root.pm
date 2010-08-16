@@ -28,6 +28,8 @@ The root page (/)
 
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
+
+    $c->res->body("Index");
 }
 
 =head2 default
@@ -39,7 +41,7 @@ Standard 404 error page
 sub default :Path {
     my ( $self, $c ) = @_;
 
-    $c->stash->{"template"} = "error-404.tt";
+    $c->res->body("Not found");
     $c->res->status(404);
 }
 
@@ -53,11 +55,9 @@ sub end : ActionClass('RenderView') {
     my ($self, $c) = @_;
     my $errors = scalar @{$c->error};
 
-    if ($errors && not defined $c->stash->{"error_msg"}) {
-        $c->stash->{"template"} = "error-500.tt";
-
-        $c->stash->{"message"} = join "\n", @{$c->error};
-        $c->res->status(500);
+    if ($errors) {
+        $c->res->body("Internal error");
+        $c->res->status("500");
         $c->clear_errors;
     }
 }

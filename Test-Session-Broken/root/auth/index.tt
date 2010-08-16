@@ -1,9 +1,0 @@
-[% IF ! c.user_exists %]
-
-[% form %]
-
-[% ELSE %]
-
-<p>You are already logged in.</p>
-
-[% END %]
