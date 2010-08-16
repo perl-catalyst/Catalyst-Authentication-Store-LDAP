@@ -437,7 +437,15 @@ Returns get_user() for I<id>.
 
 sub from_session {
     my ( $self, $c, $id ) = @_;
-    $self->get_user($id, $c);
+    my $pass;
+    if ($id =~ s/,(.*)//) {
+        my $pass = $1;
+    }
+    my $user = $self->get_user($id, $c);
+    if ($pass) {
+        $Catalyst::Authentication::Store::LDAP::User::_ldap_connection_passwords{refaddr($user)} = $pass;
+    }
+    return $user;
 }
 
 1;

@@ -56,7 +56,7 @@ BEGIN { __PACKAGE__->mk_accessors(qw/user store/) }
 
 use overload '""' => sub { shift->stringify }, fallback => 1;
 
-my %_ldap_connection_passwords; # Store inside-out so that they don't show up
+our %_ldap_connection_passwords; # Store inside-out so that they don't show up
                                 # in dumps..
 
 =head1 METHODS
@@ -180,7 +180,10 @@ Returns the User object, stringified.
 
 sub for_session {
     my $self = shift;
-    return $self->stringify;
+    my $id = $self->stringify;
+    if ($_ldap_connection_passwords{refaddr($self)}) {
+        $id .= ',' . $_ldap_connection_passwords{refaddr($self)};
+    }
 }
 
 =head2 ldap_entry
