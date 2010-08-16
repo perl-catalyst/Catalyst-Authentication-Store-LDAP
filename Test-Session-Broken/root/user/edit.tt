@@ -1,0 +1,3 @@
+<h3>Editing user "[% id %]" in location "[% ou FILTER ucfirst %]"</h3>
+[% test %]
+[% form %]

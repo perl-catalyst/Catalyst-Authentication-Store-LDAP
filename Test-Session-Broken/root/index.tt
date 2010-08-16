@@ -1,0 +1,7 @@
+<p>Add links here later / documentation?</p>
+
+[% IF ! c.user_exists %]
+Please login
+[% ELSE %]
+
+[% END %]

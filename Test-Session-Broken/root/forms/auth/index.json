@@ -1,0 +1,22 @@
+{
+    "action" : "/auth/login",
+    "elements" : [
+        {
+            "name"          : "username",
+            "type"          : "Text",
+            "label"         : "Username",
+            "constraints"   : "Required"
+        },
+        {
+            "name"          : "password",
+            "type"          : "Password",
+            "label"         : "Password",
+            "constraints"   : "Required"
+        },
+        {
+            "name"  : "submit",
+            "type"  : "Submit",
+            "value" : "Login"
+        }
+    ]
+}

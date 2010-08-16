@@ -1,0 +1,41 @@
+{
+    "indicator" : "submit",
+
+    "elements" : [
+        {
+            "name" : "cn",
+            "type" : "Text",
+            "label" : "Common Name",
+            "constraints" : "Required"
+        },
+        /* disabled for now{
+            "name" : "description",
+            "type" : "Text",
+            "label" : "Description"
+            //"constraints" : "Required"
+        },*/
+        {
+            "name" : "gecos",
+            "type" : "Text",
+            "label" : "Gecos",
+            "constraints" : "Required"
+        },
+        {
+            "name" : "gidNumber",
+            "type" : "Text",
+            "label" : "Group Id Number",
+            "constraints" : [ "Required", "Integer" ]
+        },
+        {
+            "name" : "loginShell",
+            "type" : "Text",
+            "label" : "Login Shell",
+            "constraints" : "Required"
+        },
+        {
+            "name" : "submit",
+            "type" : "Submit",
+            "value" : "Submit"
+        }
+    ]
+}

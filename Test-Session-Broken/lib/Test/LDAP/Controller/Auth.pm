@@ -1,0 +1,86 @@
+package Test::LDAP::Controller::Auth;
+use Moose;
+use namespace::autoclean;
+
+BEGIN {extends 'Catalyst::Controller::HTML::FormFu'; }
+
+=head1 NAME
+
+Test::LDAP::Controller::Auth - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+
+=head2 index
+
+=cut
+sub index :Path :Args(0) :FormConfig {
+    my ( $self, $c ) = @_;
+
+    my $form = $c->stash->{form};
+}
+
+sub login :Path("login") :Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $user = $c->req->params->{'username'};
+    my $pass = $c->req->params->{'password'};
+
+
+    if ($c->user_exists) {
+        $c->response->redirect( $c->uri_for( $c->controller("Auth")->action_for("index") ) )
+    }
+
+    # Got username / pass?
+    if ( defined ($user) && defined ($pass) ) {
+        # Let's auth
+        my $auth = $c->authenticate (
+            { username => $user, password => $pass }, "ldap"
+        );
+
+        # Let's check if we are authed, if we are then we forward to the index.
+        # Else we'll throw an error into message and display the login page
+        if ($auth) {
+            $c->response->redirect( $c->uri_for( $c->controller("Root")->action_for("index") ) );;
+
+            # Since we got auth, let's bind with the model with a dn & pass as well.
+            #$c->model('LDAP')->bind (dn => $
+        } else {
+            $c->stash->{"message"} = ("Bad username and/or password");
+        }
+
+    } else {
+        # If not throw a message c
+        $c->stash->{"message"} = "Missing Username and/or password"
+    }
+}
+
+sub logout : Path("logout") {
+    my ( $self, $c ) = @_;
+
+    if ($c->user_exists) {
+        $c->logout;
+    }
+    $c->response->redirect( $c->uri_for( $c->controller("Root")->action_for("index") ) )
+}
+
+=head1 AUTHOR
+
+root
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+1;
