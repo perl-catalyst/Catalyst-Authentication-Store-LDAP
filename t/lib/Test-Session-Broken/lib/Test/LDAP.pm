@@ -4,20 +4,9 @@ use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
 
-# Set flags and add plugins for the application
-#
-#         -Debug: activates the debug mode for very useful log messages
-#   ConfigLoader: will load the configuration from a Config::General file in the
-#                 application's home directory
-# Static::Simple: will serve static files from the application's root
-#                 directory
-
 use Catalyst qw/
     -Debug
-    Static::Simple
-    
     Authentication
-    Authorization::Roles
     Session
     Session::State::Cookie
     Session::Store::FastMmap
@@ -26,7 +15,6 @@ use Catalyst qw/
 extends 'Catalyst';
 
 our $VERSION = '0.01';
-$VERSION = eval $VERSION;
 
 # Configure the application.
 #
@@ -56,16 +44,13 @@ __PACKAGE__->config(
                 "store" => {
                     "binddn"                => "anonymous",
                     "bindpw"                => "dontcare",
-        
                     "class"                 => "LDAP",
-    
                     "ldap_server"           => "ldap.test.no",
                     "ldap_server_options"   => { 
                         "timeout" => 30, 
                         "port" => "636", 
                         "scheme" => "ldaps" 
                     },
-    
                     "role_basedn"           => "ou=stavanger,o=test,c=no",
                     "role_field"            => "cn",
                     "role_filter"           => "(&(objectClass=groupOfNames)(member=%s))",
@@ -79,36 +64,6 @@ __PACKAGE__->config(
     }
 );
 
-
-# Start the application
 __PACKAGE__->setup();
-
-
-=head1 NAME
-
-Test::LDAP - Catalyst based application
-
-=head1 SYNOPSIS
-
-    script/test_ldap_web_server.pl
-
-=head1 DESCRIPTION
-
-[enter your description here]
-
-=head1 SEE ALSO
-
-L<Test::LDAP::Controller::Root>, L<Catalyst>
-
-=head1 AUTHOR
-
-root
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 1;

@@ -2,24 +2,7 @@ package Test::LDAP::Controller::User;
 use Moose;
 use namespace::autoclean;
 
-BEGIN {extends 'Catalyst::Controller::HTML::FormFu'; }
-
-=head1 NAME
-
-Test::LDAP::Controller::User - Catalyst Controller
-
-=head1 DESCRIPTION
-
-Catalyst Controller.
-
-=head1 METHODS
-
-=cut
-
-
-=head2 index
-
-=cut
+BEGIN {extends 'Catalyst::Controller'; }
 
 sub base :Chained('/') :PathPart('user') :CaptureArgs(0) {
     my ($self, $c) = @_;
@@ -91,11 +74,6 @@ sub edit :Chained('user') :PathPart('edit') :Args(0)  {
     }
 }
 
-=head2 auto
-
-Check if the user is authenicated, if not we just forward to the login page.
-
-=cut
 sub auto :Private {
     my ( $self, $c ) = @_;
 
@@ -109,18 +87,6 @@ sub auto :Private {
 
     return 1
 }
-
-
-=head1 AUTHOR
-
-root
-
-=head1 LICENSE
-
-This library is free software. You can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 __PACKAGE__->meta->make_immutable;
 
