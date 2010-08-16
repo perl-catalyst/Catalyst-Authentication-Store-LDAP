@@ -4,12 +4,6 @@ use namespace::autoclean;
 
 BEGIN {extends 'Catalyst::Controller'; }
 
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
-
-    $c->res->body("Login");
-}
-
 sub login :Path("login") :Args(0) {
     my ( $self, $c ) = @_;
 
