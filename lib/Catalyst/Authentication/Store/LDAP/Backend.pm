@@ -71,6 +71,7 @@ use base qw( Class::Accessor::Fast );
 
 use strict;
 use warnings;
+use Scalar::Util qw/refaddr/;
 
 our $VERSION = '1.011';
 
@@ -438,12 +439,11 @@ Returns get_user() for I<id>.
 sub from_session {
     my ( $self, $c, $id ) = @_;
     my $pass;
-    if ($id =~ s/,(.*)//) {
-        my $pass = $1;
-    }
+    ($id, $pass) = split /,/, $id;
     my $user = $self->get_user($id, $c);
     if ($pass) {
         $Catalyst::Authentication::Store::LDAP::User::_ldap_connection_passwords{refaddr($user)} = $pass;
+        warn("SET PASS FOR RESTORED USER TO $pass");
     }
     return $user;
 }

@@ -251,8 +251,13 @@ as, and returns a L<Net::LDAP> object which you can use to do further queries.
 
 sub ldap_connection {
     my $self = shift;
+    my $password = $_ldap_connection_passwords{refaddr($self)};
+    unless ($password) {
+        warn("No password stored with user, cannot restore from session");
+        return;
+    }
     $self->store->ldap_bind( undef, $self->ldap_entry->dn,
-        $_ldap_connection_passwords{refaddr($self)} );
+        $password );
 }
 
 =head2 AUTOLOADed methods
